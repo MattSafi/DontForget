@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Don't Forget To</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #389cc6;
+            --card: aliceblue;
+            --muted: #6b7280;
+            --accent: #5b46f5;
+            --danger: #ef4444;
+            --radius: 14px;
+            --shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            padding: 28px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center
+        }
+
+        .app {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 20px
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px
+        }
+
+        /* Sidebar */
+        .sidebar-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px
+        }
+
+        .title-strong {
+            font-weight: 700;
+            font-size: 16px
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 12px
+        }
+
+        .lists {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .list-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .15s ease, background .15s ease
+        }
+
+        .list-row:hover {
+            transform: translateY(-2px)
+        }
+
+        .list-row.active {
+            background: linear-gradient(90deg, #f3f4ff, #fbfaff);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.06)
+        }
+
+        .list-name {
+            font-weight: 600
+        }
+
+        .list-count {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px
+        }
+
+        /* Main board */
+        .board-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px
+        }
+
+        .board-title {
+            font-size: 22px;
+            margin: 0;
+            font-weight: 800
+        }
+
+        #taskCount {
+            margin-left: auto;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .add-task {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px
+        }
+
+        .add-task input {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #eef2ff;
+            background: #fbfdff
+        }
+
+        .add-task .btn {
+            padding: 8px 14px;
+            border-radius: 10px
+        }
+
+        .tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #f1f3fa;
+            background: #fff;
+            transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease
+        }
+
+        .task .text {
+            flex: 1;
+            font-size: 16px
+        }
+
+        .task .actions {
+            display: flex;
+            gap: 8px
+        }
+
+        .small-btn {
+            padding: 6px 10px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            background: #fff;
+            cursor: pointer
+        }
+
+        /* drag styles */
+        .dragging {
+            opacity: .75;
+            transform: scale(.995);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12)
+        }
+
+        .drop-target {
+            box-shadow: inset 0 0 0 3px rgba(91, 70, 245, 0.12)
+        }
+
+        .drop-target-task {
+            border: 2px dashed rgba(91, 70, 245, 0.14)
+        }
+
+        .empty {
+            padding: 20px;
+            text-align: center;
+            color: var(--muted)
+        }
+
+        /* responsive */
+        @media (max-width:900px) {
+            .app {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="panel" aria-label="Lists">
+            <div class="sidebar-head">
+                <div class="title-strong">Lists</div>
+                <button id="newListBtn" class="btn">＋ New</button>
+            </div>
+
+            <div class="lists" id="listsContainer"></div>
+
+            <div class="sidebar-actions">
+                <button id="renameListBtn" class="btn">Rename</button>
+                <button id="deleteListBtn" class="btn">Delete</button>
+                <button id="exportBtn" class="btn">Export</button>
+            </div>
+        </aside>
+
+        <main class="panel" aria-label="Tasks">
+            <header class="board-head">
+                <h2 id="listTitle" class="board-title">(no list)</h2>
+                <div id="taskCount">0 tasks</div>
+            </header>
+
+            <div class="add-task">
+                <input id="taskInput" type="text" placeholder="Add a new task and press Enter" aria-label="New task" />
+                <button id="addTaskBtn" class="btn primary">Add</button>
+            </div>
+
+            <div class="tasks" id="tasksContainer"></div>
+
+            <div id="emptyState" class="empty">Create a list to get started — click "New" on the left.</div>
+        </main>
+    </div>
+
+    <script>
+        // State & storage
+        const STORAGE_KEY = 'todo_lists_v1';
+        const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+        let state = { lists: [], activeId: null };
+        const listsContainer = document.getElementById('listsContainer');
+        const listTitle = document.getElementById('listTitle');
+        const taskInput = document.getElementById('taskInput');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const tasksContainer = document.getElementById('tasksContainer');
+        const newListBtn = document.getElementById('newListBtn');
+        const renameListBtn = document.getElementById('renameListBtn');
+        const deleteListBtn = document.getElementById('deleteListBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const emptyState = document.getElementById('emptyState');
+        const taskCount = document.getElementById('taskCount');
+
+        // Drag helpers
+        let draggedListId = null;
+        let draggedTaskId = null;
+
+        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        function load() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) state = JSON.parse(raw);
+            } catch (e) { console.error('load failed', e); }
+            state.lists = state.lists || [];
+            if (!state.activeId && state.lists.length) state.activeId = state.lists[0].id;
+        }
+
+        // Rendering lists (left column)
+        function renderLists() {
+            listsContainer.innerHTML = '';
+            state.lists.forEach(list => {
+                const row = document.createElement('div');
+                row.className = 'list-row' + (state.activeId === list.id ? ' active' : '');
+                row.draggable = true;
+                row.dataset.id = list.id;
+
+                const name = document.createElement('div'); name.className = 'list-name'; name.textContent = list.title;
+                const count = document.createElement('div'); count.className = 'list-count'; count.textContent = list.tasks.length;
+
+                row.appendChild(name); row.appendChild(count);
+
+                // click to activate
+                row.addEventListener('click', () => { state.activeId = list.id; save(); renderLists(); });
+
+                // list drag events
+                row.addEventListener('dragstart', (e) => { draggedListId = list.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+                row.addEventListener('dragend', () => { draggedListId = null; row.classList.remove('dragging'); clearListDropTargets(); });
+                row.addEventListener('dragenter', (e) => { if (draggedListId && draggedListId !== list.id) row.classList.add('drop-target'); });
+                row.addEventListener('dragleave', () => { row.classList.remove('drop-target'); });
+                row.addEventListener('dragover', (e) => { if (draggedListId && draggedListId !== list.id) e.preventDefault(); });
+                row.addEventListener('drop', (e) => {
+                    e.preventDefault(); row.classList.remove('drop-target');
+                    if (!draggedListId || draggedListId === list.id) return;
+                    moveList(draggedListId, list.id);
+                });
+
+                listsContainer.appendChild(row);
+            });
+
+            // allow dropping to end of list area
+            listsContainer.addEventListener('dragover', e => e.preventDefault());
+            listsContainer.addEventListener('drop', e => {
+                const targetRow = e.target.closest('.list-row');
+                if (!targetRow && draggedListId) { // drop to end
+                    moveListToEnd(draggedListId);
+                }
+            });
+
+            emptyState.style.display = state.lists.length ? 'none' : '';
+            renderActiveList();
+        }
+
+        function clearListDropTargets() {
+            listsContainer.querySelectorAll('.list-row.drop-target').forEach(n => n.classList.remove('drop-target'));
+        }
+
+        function moveList(fromId, beforeId) {
+            const fromIdx = state.lists.findIndex(l => l.id === fromId);
+            if (fromIdx === -1) return;
+            const [moved] = state.lists.splice(fromIdx, 1);
+            const toIdx = state.lists.findIndex(l => l.id === beforeId);
+            const insertIdx = toIdx === -1 ? state.lists.length : toIdx;
+            state.lists.splice(insertIdx, 0, moved);
+            state.activeId = moved.id;
+            save(); renderLists();
+        }
+        function moveListToEnd(fromId) {
+            const fromIdx = state.lists.findIndex(l => l.id === fromId);
+            if (fromIdx === -1) return;
+            const [moved] = state.lists.splice(fromIdx, 1);
+            state.lists.push(moved);
+            state.activeId = moved.id; save(); renderLists();
+        }
+
+        // Rendering tasks for active list
+        function renderActiveList() {
+            const list = state.lists.find(l => l.id === state.activeId);
+            if (!list) { listTitle.textContent = '(no list)'; tasksContainer.innerHTML = ''; taskCount.textContent = '0 tasks'; return; }
+            listTitle.textContent = list.title;
+            taskCount.textContent = `${list.tasks.length} task${list.tasks.length !== 1 ? 's' : ''}`;
+
+            tasksContainer.innerHTML = '';
+            if (list.tasks.length === 0) { tasksContainer.innerHTML = '<div class="empty">No tasks yet — add one above.</div>'; return; }
+
+            list.tasks.forEach(task => {
+                const el = document.createElement('div'); el.className = 'task'; el.dataset.taskId = task.id; el.draggable = true;
+
+                const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = !!task.done; checkbox.addEventListener('change', () => { task.done = checkbox.checked; save(); renderLists(); });
+                const txt = document.createElement('div'); txt.className = 'text'; txt.textContent = task.text; if (task.done) txt.style.textDecoration = 'line-through';
+
+                const actions = document.createElement('div'); actions.className = 'actions';
+                const edit = document.createElement('button'); edit.className = 'small-btn'; edit.textContent = 'Edit'; edit.addEventListener('click', () => startEditTask(list.id, task.id));
+                const del = document.createElement('button'); del.className = 'small-btn'; del.textContent = 'Delete'; del.addEventListener('click', () => { if (confirm('Delete this task?')) { list.tasks = list.tasks.filter(t => t.id !== task.id); save(); renderLists(); } });
+                actions.appendChild(edit); actions.appendChild(del);
+
+                el.appendChild(checkbox); el.appendChild(txt); el.appendChild(actions);
+
+                // task drag events
+                el.addEventListener('dragstart', (e) => { draggedTaskId = task.id; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+                el.addEventListener('dragend', () => { draggedTaskId = null; el.classList.remove('dragging'); clearTaskDropTargets(); });
+                el.addEventListener('dragenter', () => { if (draggedTaskId && draggedTaskId !== task.id) el.classList.add('drop-target-task'); });
+                el.addEventListener('dragleave', () => { el.classList.remove('drop-target-task'); });
+                el.addEventListener('dragover', (e) => { if (draggedTaskId && draggedTaskId !== task.id) e.preventDefault(); });
+                el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('drop-target-task'); if (!draggedTaskId || draggedTaskId === task.id) return; moveTask(draggedTaskId, task.id); });
+
+                tasksContainer.appendChild(el);
+            });
+
+            // allow dropping to end of tasks container
+            tasksContainer.addEventListener('dragover', e => e.preventDefault());
+            tasksContainer.addEventListener('drop', e => {
+                const target = e.target.closest('.task');
+                if (!target && draggedTaskId) { moveTaskToEnd(draggedTaskId); }
+            });
+        }
+
+        function clearTaskDropTargets() { tasksContainer.querySelectorAll('.drop-target-task').forEach(n => n.classList.remove('drop-target-task')); }
+
+        function moveTask(fromTaskId, beforeTaskId) {
+            const list = state.lists.find(l => l.id === state.activeId); if (!list) return;
+            const fromIdx = list.tasks.findIndex(t => t.id === fromTaskId); if (fromIdx === -1) return;
+            const [moved] = list.tasks.splice(fromIdx, 1);
+            const toIdx = list.tasks.findIndex(t => t.id === beforeTaskId);
+            const insertIdx = toIdx === -1 ? list.tasks.length : toIdx;
+            list.tasks.splice(insertIdx, 0, moved);
+            save(); renderLists();
+        }
+        function moveTaskToEnd(fromTaskId) { const list = state.lists.find(l => l.id === state.activeId); if (!list) return; const fromIdx = list.tasks.findIndex(t => t.id === fromTaskId); if (fromIdx === -1) return; const [moved] = list.tasks.splice(fromIdx, 1); list.tasks.push(moved); save(); renderLists(); }
+
+        // Edit task inline
+        function startEditTask(listId, taskId) {
+            const list = state.lists.find(l => l.id === listId); if (!list) return; const task = list.tasks.find(t => t.id === taskId); if (!task) return;
+            const taskEl = [...tasksContainer.children].find(n => n.dataset.taskId === taskId); if (!taskEl) return;
+            const textNode = taskEl.querySelector('.text'); const old = task.text;
+            const input = document.createElement('input'); input.type = 'text'; input.value = old; input.className = ''; input.style.width = '100%'; input.style.padding = '8px'; input.style.borderRadius = '8px';
+            textNode.replaceWith(input); input.focus(); input.select();
+            input.addEventListener('blur', () => { const val = input.value.trim(); if (val) task.text = val; save(); renderLists(); });
+            input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = old; input.blur(); } });
+        }
+
+        // Actions
+        newListBtn.addEventListener('click', () => {
+            const title = prompt('List name:', 'New list'); if (!title) return;
+            const l = { id: uid(), title, tasks: [] };
+            state.lists.push(l); state.activeId = l.id; save(); renderLists();
+        });
+
+        renameListBtn.addEventListener('click', () => {
+            const list = state.lists.find(l => l.id === state.activeId); if (!list) return alert('No list selected');
+            const title = prompt('Rename list:', list.title); if (!title) return; list.title = title; save(); renderLists();
+        });
+
+        deleteListBtn.addEventListener('click', () => {
+            if (!state.activeId) return alert('No list selected');
+            const list = state.lists.find(l => l.id === state.activeId); if (!list) return;
+            if (!confirm(`Delete list "${list.title}" and all its tasks?`)) return;
+            state.lists = state.lists.filter(l => l.id !== state.activeId);
+            state.activeId = state.lists.length ? state.lists[0].id : null;
+            save(); renderLists();
+        });
+
+        exportBtn.addEventListener('click', () => {
+            const dataStr = JSON.stringify(state, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'todo-lists-export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        });
+
+        addTaskBtn.addEventListener('click', addTaskFromInput);
+        taskInput.addEventListener('keydown', e => { if (e.key === 'Enter') addTaskFromInput(); });
+
+        function addTaskFromInput() {
+            const text = taskInput.value.trim(); if (!text) return; const list = state.lists.find(l => l.id === state.activeId);
+            if (!list) { alert('Create a list first.'); return; }
+            list.tasks.push({ id: uid(), text, done: false }); taskInput.value = ''; save(); renderLists();
+        }
+
+        // keyboard shortcut
+        document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') { e.preventDefault(); newListBtn.click(); } });
+
+        // initial load and demo data
+        load();
+        if (state.lists.length === 0) {
+            const sample = {
+                id: uid(), title: 'Getting started', tasks: [
+                    { id: uid(), text: 'Add tasks using the input above', done: false },
+                    { id: uid(), text: 'This is a task', done: false },
+                    { id: uid(), text: 'New item', done: false }
+                ]
+            };
+            const gift = { id: uid(), title: 'Gift ideas', tasks: [] };
+            state.lists.push(sample, gift); state.activeId = sample.id; save();
+        }
+        renderLists();
+    </script>
+</body>
+
+</html>
