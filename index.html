@@ -4,246 +4,487 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Don't Forget To</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <style>
-        :root {
-            --bg: #389cc6;
-            --card: aliceblue;
-            --muted: #6b7280;
-            --accent: #5b46f5;
-            --danger: #ef4444;
-            --radius: 14px;
-            --shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-        }
+    <title>DontForget</title>
+    <!doctype html>
+    <html lang="en">
 
-        * {
-            box-sizing: border-box
-        }
-
-        html,
-        body {
-            height: 100%
-        }
-
-        body {
-            margin: 0;
-            background: var(--bg);
-            padding: 28px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center
-        }
-
-        .app {
-            width: 100%;
-            max-width: 1100px;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 20px
-        }
-
-        .panel {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 18px
-        }
-
-        /* Sidebar */
-        .sidebar-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px
-        }
-
-        .title-strong {
-            font-weight: 700;
-            font-size: 16px
-        }
-
-        .btn {
-            background: transparent;
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            padding: 8px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600
-        }
-
-        .btn.primary {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 12px
-        }
-
-        .lists {
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-
-        .list-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform .15s ease, box-shadow .15s ease, background .15s ease
-        }
-
-        .list-row:hover {
-            transform: translateY(-2px)
-        }
-
-        .list-row.active {
-            background: linear-gradient(90deg, #f3f4ff, #fbfaff);
-            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.06)
-        }
-
-        .list-name {
-            font-weight: 600
-        }
-
-        .list-count {
-            font-size: 13px;
-            color: var(--muted)
-        }
-
-        .sidebar-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 14px
-        }
-
-        /* Main board */
-        .board-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px
-        }
-
-        .board-title {
-            font-size: 22px;
-            margin: 0;
-            font-weight: 800
-        }
-
-        #taskCount {
-            margin-left: auto;
-            color: var(--muted);
-            font-weight: 600
-        }
-
-        .add-task {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px
-        }
-
-        .add-task input {
-            flex: 1;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #eef2ff;
-            background: #fbfdff
-        }
-
-        .add-task .btn {
-            padding: 8px 14px;
-            border-radius: 10px
-        }
-
-        .tasks {
-            display: flex;
-            flex-direction: column;
-            gap: 10px
-        }
-
-        .task {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid #f1f3fa;
-            background: #fff;
-            transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease
-        }
-
-        .task .text {
-            flex: 1;
-            font-size: 16px
-        }
-
-        .task .actions {
-            display: flex;
-            gap: 8px
-        }
-
-        .small-btn {
-            padding: 6px 10px;
-            border-radius: 10px;
-            border: 1px solid #eee;
-            background: #fff;
-            cursor: pointer
-        }
-
-        /* drag styles */
-        .dragging {
-            opacity: .75;
-            transform: scale(.995);
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12)
-        }
-
-        .drop-target {
-            box-shadow: inset 0 0 0 3px rgba(91, 70, 245, 0.12)
-        }
-
-        .drop-target-task {
-            border: 2px dashed rgba(91, 70, 245, 0.14)
-        }
-
-        .empty {
-            padding: 20px;
-            text-align: center;
-            color: var(--muted)
-        }
-
-        /* responsive */
-        @media (max-width:900px) {
-            .app {
-                grid-template-columns: 1fr
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>To‑Do Lists — Mobile‑First with Pointer DnD & Dark Mode</title>
+        <style>
+            :root {
+                --bg: #f2f4fb;
+                --card: #ffffff;
+                --muted: #6b7280;
+                --accent: #5b46f5;
+                --danger: #ef4444;
+                --text: #0f172a;
+                --task-text: #0f172a;
+                --radius: 14px;
+                --shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+                font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             }
-        }
-    </style>
+
+            :root.dark {
+                --bg: #0f1220;
+                --card: #13162a;
+                --muted: #a5b4cf;
+                --accent: #7c6aff;
+                --danger: #ff6b6b;
+                --text: #e5e7f3;
+                --task-text: #000000;
+                --shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+            }
+
+            * {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent
+            }
+
+            html,
+            body {
+                height: 100%
+            }
+
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+            }
+
+            /* Header */
+            .topbar {
+                position: sticky;
+                top: 0;
+                z-index: 40;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                justify-content: space-between;
+                padding: 14px 16px;
+                background: var(--bg);
+                backdrop-filter: saturate(180%) blur(4px)
+            }
+
+            .topbar .left {
+                display: flex;
+                align-items: center;
+                gap: 10px
+            }
+
+            .icon-btn {
+                appearance: none;
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                background: var(--card);
+                color: var(--text);
+                border-radius: 12px;
+                padding: 8px 10px;
+                cursor: pointer;
+                box-shadow: var(--shadow)
+            }
+
+            .icon-btn.primary {
+                background: var(--accent);
+                color: #fff;
+                border: none
+            }
+
+            /* Hide hamburger on desktop */
+            .hamburger-btn {
+                display: inline-block
+            }
+
+            #renameListBtn,
+            #deleteListBtn,
+            #exportBtn {
+                color: var(--muted);
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: 600;
+
+            }
+
+            @media (min-width:900px) {
+                .hamburger-btn {
+                    display: none
+                }
+            }
+
+            /* Layout: mobile-first single column */
+            .app {
+                max-width: 1100px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 16px
+            }
+
+            @media (min-width:900px) {
+                .app {
+                    grid-template-columns: 260px 1fr
+                }
+            }
+
+            .panel {
+                background: var(--card);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 16px
+            }
+
+            /* Sidebar (drawer on mobile) */
+            .sidebar {
+                position: fixed;
+                inset: 0 auto 0 0;
+                width: 88vw;
+                max-width: 320px;
+                transform: translateX(-100%);
+                transition: transform .25s ease;
+                z-index: 50;
+                background: var(--card);
+                box-shadow: var(--shadow);
+                border-radius: 0 16px 16px 0;
+                display: flex;
+                flex-direction: column
+            }
+
+            .sidebar.open {
+                transform: translateX(0)
+            }
+
+            .sidebar .sidebar-inner {
+                padding: 16px;
+                height: 100%;
+                display: flex;
+                flex-direction: column
+            }
+
+            .overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, .35);
+                backdrop-filter: blur(2px);
+                display: none;
+                z-index: 45
+            }
+
+            .overlay.show {
+                display: block
+            }
+
+            @media (min-width:900px) {
+                .overlay {
+                    display: none !important
+                }
+
+                .sidebar {
+                    position: static;
+                    transform: none;
+                    width: auto;
+                    max-width: none;
+                    border-radius: var(--radius)
+                }
+
+                .sidebar .sidebar-inner {
+                    padding: 16px
+                }
+            }
+
+            .sidebar-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px
+            }
+
+            .title-strong {
+                font-weight: 700;
+                font-size: 16px
+            }
+
+            .btn {
+                background: transparent;
+                border: 1px solid rgba(15, 23, 42, 0.06);
+                padding: 10px 12px;
+                border-radius: 12px;
+                cursor: pointer;
+                font-weight: 600;
+                color: var(--text)
+            }
+
+            .btn.primary {
+                background: var(--accent);
+                color: white;
+                border: none
+            }
+
+            .lists {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch
+            }
+
+            .list-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px;
+                border-radius: 12px;
+                cursor: grab;
+                transition: transform .15s ease, box-shadow .15s ease, background .15s ease
+            }
+
+            .list-row:hover {
+                transform: translateY(-2px)
+            }
+
+            .list-row.active {
+                background: linear-gradient(90deg, #f3f4ff20, #fbfaff20);
+                box-shadow: 0 6px 18px rgba(79, 70, 229, 0.08)
+            }
+
+            .list-name {
+                font-weight: 600
+            }
+
+            .list-count {
+                font-size: 13px;
+                color: var(--muted)
+            }
+
+            .sidebar-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 14px
+            }
+
+            @media (min-width:900px) {
+                .sidebar-actions {
+                    display: flex
+                }
+            }
+
+            .more-menu {
+                position: relative
+            }
+
+            .menu {
+                position: absolute;
+                right: 0;
+                top: 110%;
+                background: var(--card);
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                display: none;
+                min-width: 160px
+            }
+
+            .menu.open {
+                display: block
+            }
+
+            .menu button {
+                width: 100%;
+                text-align: left;
+                padding: 10px 12px;
+                border: 0;
+                background: transparent;
+                cursor: pointer
+            }
+
+            /* Main board */
+            .board {
+                min-height: 50vh
+            }
+
+            .board-head {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 14px
+            }
+
+            .board-title {
+                font-size: 22px;
+                margin: 0;
+                font-weight: 800
+            }
+
+            #taskCount {
+                margin-left: auto;
+                color: var(--muted);
+                font-weight: 600
+            }
+
+            .add-task {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 14px
+            }
+
+            .add-task input {
+                flex: 1;
+                padding: 14px;
+                border-radius: 12px;
+                border: 1px solid #eef2ff;
+                background: #fbfdff;
+                color: var(--task-text)
+            }
+
+            .add-task .btn {
+                padding: 10px 14px;
+                border-radius: 12px
+            }
+
+            .tasks {
+                display: flex;
+                flex-direction: column;
+                gap: 10px
+            }
+
+            .task {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 14px;
+                border-radius: 12px;
+                border: 1px solid #f1f3fa;
+                background: #fff;
+                color: var(--task-text);
+                transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease;
+                touch-action: none;
+                cursor: grab
+            }
+
+            .task .text {
+                flex: 1;
+                font-size: 16px;
+                color: var(--task-text)
+            }
+
+            .task .actions {
+                display: flex;
+                gap: 8px
+            }
+
+            .small-btn {
+                padding: 8px 10px;
+                border-radius: 10px;
+                border: 1px solid #eee;
+                background: #fff;
+                color: var(--task-text);
+                cursor: pointer
+            }
+
+            /* drag styles */
+            .dragging {
+                opacity: .85;
+                transform: scale(.995);
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12)
+            }
+
+            .drop-indicator {
+                height: 10px;
+                margin: 2px 0;
+                border-radius: 6px;
+                background: rgba(91, 70, 245, 0.25);
+                display: none
+            }
+
+            .drop-indicator.show {
+                display: block
+            }
+
+            .empty {
+                padding: 20px;
+                text-align: center;
+                color: var(--muted)
+            }
+
+            /* Desktop overrides: show inline actions, hide hamburger */
+            @media (min-width:900px) {
+                #openSidebar {
+                    display: none;
+                }
+
+                /* turn kebab menu into inline buttons */
+                .more-menu #moreBtn {
+                    display: none;
+                }
+
+                .more-menu .menu {
+                    position: static;
+                    display: flex !important;
+                    gap: 8px;
+                    border: none;
+                    box-shadow: none;
+                    background: transparent;
+                    min-width: unset;
+                    top: auto;
+                    right: auto
+                }
+
+                .more-menu .menu button {
+                    width: auto;
+                    text-align: center;
+                    border: 1px solid rgba(15, 23, 42, 0.06);
+                    border-radius: 12px;
+                    background: var(--card)
+                }
+            }
+        </style>
+    </head>
+
+<body>
+    <!-- rest of the HTML unchanged -->
+</body>
+
+</html>
+
 </head>
 
 <body>
+    <header class="topbar">
+        <div class="left">
+            <button id="openSidebar" class="icon-btn" aria-label="Open lists">☰</button>
+            <strong>To‑Do</strong>
+        </div>
+        <div class="right">
+            <button id="darkToggle" class="icon-btn" aria-label="Toggle dark mode">🌙</button>
+        </div>
+    </header>
+
     <div class="app">
-        <aside class="panel" aria-label="Lists">
-            <div class="sidebar-head">
-                <div class="title-strong">Lists</div>
-                <button id="newListBtn" class="btn">＋ New</button>
-            </div>
+        <!-- Sidebar as drawer on mobile, panel on desktop -->
+        <aside class="sidebar panel" id="sidebar">
+            <div class="sidebar-inner">
+                <div class="sidebar-head">
+                    <div class="title-strong">Lists</div>
+                    <button id="newListBtn" class="btn">＋ New</button>
+                </div>
 
-            <div class="lists" id="listsContainer"></div>
+                <div class="lists" id="listsContainer"></div>
 
-            <div class="sidebar-actions">
-                <button id="renameListBtn" class="btn">Rename</button>
-                <button id="deleteListBtn" class="btn">Delete</button>
-                <button id="exportBtn" class="btn">Export</button>
+                <div class="sidebar-actions">
+                    <div class="more-menu">
+                        <button id="moreBtn" class="btn">⋮</button>
+                        <div id="moreMenu" class="menu">
+                            <button id="renameListBtn">Rename</button>
+                            <button id="deleteListBtn">Delete</button>
+                            <button id="exportBtn">Export</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </aside>
+        <div class="overlay" id="overlay"></div>
 
-        <main class="panel" aria-label="Tasks">
+        <main class="panel board" aria-label="Tasks">
             <header class="board-head">
                 <h2 id="listTitle" class="board-title">(no list)</h2>
                 <div id="taskCount">0 tasks</div>
@@ -254,18 +495,27 @@
                 <button id="addTaskBtn" class="btn primary">Add</button>
             </div>
 
+            <div class="drop-indicator" id="taskDropIndicator"></div>
             <div class="tasks" id="tasksContainer"></div>
 
-            <div id="emptyState" class="empty">Create a list to get started — click "New" on the left.</div>
+            <div id="emptyState" class="empty">Create a list to get started — tap "New" above.</div>
         </main>
     </div>
 
     <script>
-        // State & storage
+        // === State & storage ===
         const STORAGE_KEY = 'todo_lists_v1';
+        const THEME_KEY = 'todo_theme_v1';
         const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
         let state = { lists: [], activeId: null };
+
+        // === Elements ===
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openSidebarBtn = document.getElementById('openSidebar');
+        const darkToggle = document.getElementById('darkToggle');
+
         const listsContainer = document.getElementById('listsContainer');
         const listTitle = document.getElementById('listTitle');
         const taskInput = document.getElementById('taskInput');
@@ -277,12 +527,38 @@
         const exportBtn = document.getElementById('exportBtn');
         const emptyState = document.getElementById('emptyState');
         const taskCount = document.getElementById('taskCount');
+        const moreBtn = document.getElementById('moreBtn');
+        const moreMenu = document.getElementById('moreMenu');
+        const taskDropIndicator = document.getElementById('taskDropIndicator');
 
-        // Drag helpers
-        let draggedListId = null;
-        let draggedTaskId = null;
+        // === Theme ===
+        const applyTheme = (mode) => {
+            const root = document.documentElement;
+            if (mode === 'dark') { root.classList.add('dark'); darkToggle.textContent = '☀️'; }
+            else { root.classList.remove('dark'); darkToggle.textContent = '🌙'; }
+            localStorage.setItem(THEME_KEY, mode);
+        };
+        applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+        darkToggle.addEventListener('click', () => {
+            const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            applyTheme(next);
+        });
 
-        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        // === Drawer controls (mobile) ===
+        const openDrawer = () => { sidebar.classList.add('open'); overlay.classList.add('show'); };
+        const closeDrawer = () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); };
+        openSidebarBtn.addEventListener('click', openDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        // Kebab menu
+        moreBtn.addEventListener('click', (e) => { e.stopPropagation(); moreMenu.classList.toggle('open'); });
+        document.addEventListener('click', () => moreMenu.classList.remove('open'));
+
+        // === Storage helpers ===
+        const saveNow = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        const debounce = (fn, ms = 120) => { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; };
+        const save = debounce(saveNow, 120);
+
         function load() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
@@ -292,74 +568,43 @@
             if (!state.activeId && state.lists.length) state.activeId = state.lists[0].id;
         }
 
-        // Rendering lists (left column)
+        // === Rendering lists (left) ===
         function renderLists() {
             listsContainer.innerHTML = '';
             state.lists.forEach(list => {
                 const row = document.createElement('div');
                 row.className = 'list-row' + (state.activeId === list.id ? ' active' : '');
-                row.draggable = true;
                 row.dataset.id = list.id;
+                row.setAttribute('role', 'button');
 
                 const name = document.createElement('div'); name.className = 'list-name'; name.textContent = list.title;
                 const count = document.createElement('div'); count.className = 'list-count'; count.textContent = list.tasks.length;
-
                 row.appendChild(name); row.appendChild(count);
 
-                // click to activate
-                row.addEventListener('click', () => { state.activeId = list.id; save(); renderLists(); });
+                // tap to activate
+                row.addEventListener('click', () => { state.activeId = list.id; save(); renderLists(); closeDrawer(); });
 
-                // list drag events
-                row.addEventListener('dragstart', (e) => { draggedListId = list.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-                row.addEventListener('dragend', () => { draggedListId = null; row.classList.remove('dragging'); clearListDropTargets(); });
-                row.addEventListener('dragenter', (e) => { if (draggedListId && draggedListId !== list.id) row.classList.add('drop-target'); });
-                row.addEventListener('dragleave', () => { row.classList.remove('drop-target'); });
-                row.addEventListener('dragover', (e) => { if (draggedListId && draggedListId !== list.id) e.preventDefault(); });
-                row.addEventListener('drop', (e) => {
-                    e.preventDefault(); row.classList.remove('drop-target');
-                    if (!draggedListId || draggedListId === list.id) return;
-                    moveList(draggedListId, list.id);
+                // Pointer drag for list reordering
+                enablePointerSort(row, listsContainer, {
+                    onCommit: (fromEl, toIndex) => {
+                        const fromId = fromEl.dataset.id;
+                        const fromIdx0 = state.lists.findIndex(l => l.id === fromId);
+                        if (fromIdx0 < 0) return;
+                        const [moved] = state.lists.splice(fromIdx0, 1);
+                        state.lists.splice(toIndex, 0, moved);
+                        state.activeId = moved.id;
+                        save(); renderLists();
+                    }
                 });
 
                 listsContainer.appendChild(row);
-            });
-
-            // allow dropping to end of list area
-            listsContainer.addEventListener('dragover', e => e.preventDefault());
-            listsContainer.addEventListener('drop', e => {
-                const targetRow = e.target.closest('.list-row');
-                if (!targetRow && draggedListId) { // drop to end
-                    moveListToEnd(draggedListId);
-                }
             });
 
             emptyState.style.display = state.lists.length ? 'none' : '';
             renderActiveList();
         }
 
-        function clearListDropTargets() {
-            listsContainer.querySelectorAll('.list-row.drop-target').forEach(n => n.classList.remove('drop-target'));
-        }
-
-        function moveList(fromId, beforeId) {
-            const fromIdx = state.lists.findIndex(l => l.id === fromId);
-            if (fromIdx === -1) return;
-            const [moved] = state.lists.splice(fromIdx, 1);
-            const toIdx = state.lists.findIndex(l => l.id === beforeId);
-            const insertIdx = toIdx === -1 ? state.lists.length : toIdx;
-            state.lists.splice(insertIdx, 0, moved);
-            state.activeId = moved.id;
-            save(); renderLists();
-        }
-        function moveListToEnd(fromId) {
-            const fromIdx = state.lists.findIndex(l => l.id === fromId);
-            if (fromIdx === -1) return;
-            const [moved] = state.lists.splice(fromIdx, 1);
-            state.lists.push(moved);
-            state.activeId = moved.id; save(); renderLists();
-        }
-
-        // Rendering tasks for active list
+        // === Rendering tasks (right) ===
         function renderActiveList() {
             const list = state.lists.find(l => l.id === state.activeId);
             if (!list) { listTitle.textContent = '(no list)'; tasksContainer.innerHTML = ''; taskCount.textContent = '0 tasks'; return; }
@@ -370,7 +615,7 @@
             if (list.tasks.length === 0) { tasksContainer.innerHTML = '<div class="empty">No tasks yet — add one above.</div>'; return; }
 
             list.tasks.forEach(task => {
-                const el = document.createElement('div'); el.className = 'task'; el.dataset.taskId = task.id; el.draggable = true;
+                const el = document.createElement('div'); el.className = 'task'; el.dataset.taskId = task.id;
 
                 const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = !!task.done; checkbox.addEventListener('change', () => { task.done = checkbox.checked; save(); renderLists(); });
                 const txt = document.createElement('div'); txt.className = 'text'; txt.textContent = task.text; if (task.done) txt.style.textDecoration = 'line-through';
@@ -382,50 +627,35 @@
 
                 el.appendChild(checkbox); el.appendChild(txt); el.appendChild(actions);
 
-                // task drag events
-                el.addEventListener('dragstart', (e) => { draggedTaskId = task.id; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-                el.addEventListener('dragend', () => { draggedTaskId = null; el.classList.remove('dragging'); clearTaskDropTargets(); });
-                el.addEventListener('dragenter', () => { if (draggedTaskId && draggedTaskId !== task.id) el.classList.add('drop-target-task'); });
-                el.addEventListener('dragleave', () => { el.classList.remove('drop-target-task'); });
-                el.addEventListener('dragover', (e) => { if (draggedTaskId && draggedTaskId !== task.id) e.preventDefault(); });
-                el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('drop-target-task'); if (!draggedTaskId || draggedTaskId === task.id) return; moveTask(draggedTaskId, task.id); });
+                // Pointer drag for task sorting
+                enablePointerSort(el, tasksContainer, {
+                    onCommit: (fromEl, toIndex) => {
+                        const fromId = fromEl.dataset.taskId;
+                        const fromIdx0 = list.tasks.findIndex(t => t.id === fromId);
+                        if (fromIdx0 < 0) return;
+                        const [moved] = list.tasks.splice(fromIdx0, 1);
+                        list.tasks.splice(toIndex, 0, moved);
+                        save(); renderLists();
+                    },
+                    indicator: taskDropIndicator
+                });
 
                 tasksContainer.appendChild(el);
             });
-
-            // allow dropping to end of tasks container
-            tasksContainer.addEventListener('dragover', e => e.preventDefault());
-            tasksContainer.addEventListener('drop', e => {
-                const target = e.target.closest('.task');
-                if (!target && draggedTaskId) { moveTaskToEnd(draggedTaskId); }
-            });
         }
 
-        function clearTaskDropTargets() { tasksContainer.querySelectorAll('.drop-target-task').forEach(n => n.classList.remove('drop-target-task')); }
-
-        function moveTask(fromTaskId, beforeTaskId) {
-            const list = state.lists.find(l => l.id === state.activeId); if (!list) return;
-            const fromIdx = list.tasks.findIndex(t => t.id === fromTaskId); if (fromIdx === -1) return;
-            const [moved] = list.tasks.splice(fromIdx, 1);
-            const toIdx = list.tasks.findIndex(t => t.id === beforeTaskId);
-            const insertIdx = toIdx === -1 ? list.tasks.length : toIdx;
-            list.tasks.splice(insertIdx, 0, moved);
-            save(); renderLists();
-        }
-        function moveTaskToEnd(fromTaskId) { const list = state.lists.find(l => l.id === state.activeId); if (!list) return; const fromIdx = list.tasks.findIndex(t => t.id === fromTaskId); if (fromIdx === -1) return; const [moved] = list.tasks.splice(fromIdx, 1); list.tasks.push(moved); save(); renderLists(); }
-
-        // Edit task inline
+        // === Inline task edit ===
         function startEditTask(listId, taskId) {
             const list = state.lists.find(l => l.id === listId); if (!list) return; const task = list.tasks.find(t => t.id === taskId); if (!task) return;
             const taskEl = [...tasksContainer.children].find(n => n.dataset.taskId === taskId); if (!taskEl) return;
             const textNode = taskEl.querySelector('.text'); const old = task.text;
-            const input = document.createElement('input'); input.type = 'text'; input.value = old; input.className = ''; input.style.width = '100%'; input.style.padding = '8px'; input.style.borderRadius = '8px';
+            const input = document.createElement('input'); input.type = 'text'; input.value = old; input.style.width = '100%'; input.style.padding = '10px'; input.style.borderRadius = '10px';
             textNode.replaceWith(input); input.focus(); input.select();
             input.addEventListener('blur', () => { const val = input.value.trim(); if (val) task.text = val; save(); renderLists(); });
             input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); if (e.key === 'Escape') { input.value = old; input.blur(); } });
         }
 
-        // Actions
+        // === Actions ===
         newListBtn.addEventListener('click', () => {
             const title = prompt('List name:', 'New list'); if (!title) return;
             const l = { id: uid(), title, tasks: [] };
@@ -465,20 +695,92 @@
         // keyboard shortcut
         document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') { e.preventDefault(); newListBtn.click(); } });
 
-        // initial load and demo data
-        load();
-        if (state.lists.length === 0) {
-            const sample = {
-                id: uid(), title: 'Getting started', tasks: [
-                    { id: uid(), text: 'Add tasks using the input above', done: false },
-                    { id: uid(), text: 'This is a task', done: false },
-                    { id: uid(), text: 'New item', done: false }
-                ]
+        // === Pointer-based sortable helper (mouse + touch) ===
+        function enablePointerSort(handleEl, containerEl, opts) {
+            let startY = 0, dragging = false, ghostEl = null, placeholderIndex = -1, startIndex = -1;
+            const indicator = opts?.indicator;
+
+            const onPointerDown = (e) => {
+                const isPrimary = e.isPrimary !== false;
+                if (!isPrimary) return;
+                // don't start drag on interactive controls
+                if (e.target.closest('button, input, textarea, a, select')) return;
+                handleEl.setPointerCapture?.(e.pointerId);
+                startY = e.clientY || (e.touches?.[0]?.clientY);
+                dragging = true;
+                handleEl.classList.add('dragging');
+                startIndex = [...containerEl.children].indexOf(handleEl);
+                // ghost clone for smoother dragging feedback (visual only)
+                ghostEl = handleEl.cloneNode(true);
+                ghostEl.style.position = 'fixed'; ghostEl.style.left = handleEl.getBoundingClientRect().left + 'px';
+                ghostEl.style.top = handleEl.getBoundingClientRect().top + 'px';
+                ghostEl.style.width = handleEl.getBoundingClientRect().width + 'px';
+                ghostEl.style.pointerEvents = 'none'; ghostEl.style.opacity = '0.9'; ghostEl.style.zIndex = '1000';
+                ghostEl.classList.add('dragging');
+                document.body.appendChild(ghostEl);
             };
-            const gift = { id: uid(), title: 'Gift ideas', tasks: [] };
-            state.lists.push(sample, gift); state.activeId = sample.id; save();
+
+            const onPointerMove = (e) => {
+                if (!dragging) return;
+                const y = e.clientY ?? (e.touches?.[0]?.clientY);
+                if (y == null) return;
+                // move ghost
+                const dy = y - startY;
+                const rect = handleEl.getBoundingClientRect();
+                ghostEl.style.transform = `translateY(${dy}px)`;
+
+                // compute index by midpoint comparison
+                const siblings = [...containerEl.children].filter(n => n !== ghostEl);
+                const positions = siblings.map(n => ({ el: n, rect: n.getBoundingClientRect(), mid: n.getBoundingClientRect().top + n.getBoundingClientRect().height / 2 }));
+                let newIndex = positions.findIndex(p => y < p.mid);
+                if (newIndex === -1) newIndex = siblings.length; // append
+                placeholderIndex = newIndex;
+
+                // show indicator row if provided
+                if (indicator) {
+                    indicator.classList.add('show');
+                    const refEl = siblings[newIndex];
+                    if (refEl) { containerEl.insertBefore(indicator, refEl); }
+                    else { containerEl.appendChild(indicator); }
+                }
+            };
+
+            const onPointerUp = () => {
+                if (!dragging) return;
+                dragging = false;
+                handleEl.classList.remove('dragging');
+                ghostEl?.remove(); ghostEl = null;
+                if (indicator) { indicator.classList.remove('show'); indicator.remove(); }
+                if (placeholderIndex > -1 && placeholderIndex !== startIndex) {
+                    opts?.onCommit?.(handleEl, placeholderIndex);
+                }
+            };
+
+            // Pointer Events (covers mouse + touch)
+            handleEl.style.touchAction = 'none';
+            handleEl.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
         }
-        renderLists();
+
+        // === Init ===
+        function init() {
+            load();
+            if (state.lists.length === 0) {
+                const sample = {
+                    id: uid(), title: 'Getting started', tasks: [
+                        { id: uid(), text: 'Add tasks using the input above', done: false },
+                        { id: uid(), text: 'This is a task', done: false },
+                        { id: uid(), text: 'Reorder me by dragging', done: false }
+                    ]
+                };
+                const gift = { id: uid(), title: 'Gift ideas', tasks: [] };
+                state.lists.push(sample, gift); state.activeId = sample.id; saveNow();
+            }
+            renderLists();
+        }
+
+        init();
     </script>
 </body>
 
